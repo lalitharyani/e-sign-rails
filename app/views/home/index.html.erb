@@ -12,16 +12,18 @@
 
       <div id="signature-pad" class="m-signature-pad">
         <div class="m-signature-pad--body">
-          <canvas width="270" height="350" style="width: 270px;350px;border:2px solid #000000;display: block;margin: 0 auto;"></canvas>
+          <canvas width="270" height="350" style="width: 270px;350px;border:2px solid #000000;display: block;margin: 0 auto;">
+          </canvas>
         </div>
 
         <div class="m-signature-pad--footer form-actions fluid">
           <div class="row">
             <div class="col-md-6">
               <div class="col-md-offset-3 col-md-9">
-                <button class="button clear" data-action="clear">Clear</button >
-                <button class="button preview" data-action="preview" >Preview</button>
-                <button class="button save btn" data-action="save" id="save_signature">Save</button>
+                <button class="button" data-action="clear">Clear</button >
+                <button class="button" data-action="preview" >Preview</button>
+                <button class="button" data-action="sign-pdf">Sign Pdf</button>
+                <!-- <button class="button" data-action="sign-xls">Sign Xls</button> -->
               </div>
             </div>
             <div class="col-md-6">
@@ -32,5 +34,10 @@
     </div>
   </div>
 </div>
+
+<%= form_tag(sign_document_path, id: 'form') do %>
+  <%= hidden_field_tag "data_uri" %>
+  <%= hidden_field_tag "doc_type" %>
+<% end %>
 
 <%= javascript_include_tag "signature" %>

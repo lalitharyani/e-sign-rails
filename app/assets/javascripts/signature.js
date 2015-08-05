@@ -30,7 +30,7 @@ signaturePad.clear();
 signaturePad.isEmpty();
 var wrapper = document.getElementById("signature-pad"),
   clearButton = wrapper.querySelector("[data-action=clear]"),
-  saveButton = wrapper.querySelector("[data-action=save]"),
+  signPdfButton = wrapper.querySelector("[data-action=sign-pdf]"),
   previewButton = wrapper.querySelector("[data-action=preview]"),
   canvas = wrapper.querySelector("canvas"),
   signaturePad;
@@ -44,13 +44,15 @@ previewButton.addEventListener("click", function (event) {
   
 });
 
-saveButton.addEventListener("click", function (event) {
+///process pdf document
+signPdfButton.addEventListener("click", function (event) {
   if (signaturePad.isEmpty()) {
-      alert("Please provide signature first.");
+    alert("Please provide signature first.");
   } else {
+    $('#data_uri').val(signaturePad.toDataURL());
+    $('#doc_type').val("pdf");
 
-  	///send ajax request to save the signature
-
+    $('#form').submit();
   }
 
 });
