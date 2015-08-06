@@ -30,9 +30,46 @@ class HomeController < ApplicationController
       
       ##send signed pdf to browser
       return send_data pdf.render, type: :pdf, filename: "e-Sign-rails.pdf"
-    
+   
+
     ##if requested document type is 'xls'
     elsif params[:doc_type] == "xls"
+    
+      package = get_xls
+      wb = package.workbook 
+      wb.add_worksheet(name: "e-Sign-rails") do |sheet|
+        
+        ##add two blank rows
+        sheet.add_row
+        bold_style = wb.styles.add_style(b: true, sz: 14)
+        sheet.add_row [nil, nil, nil, "E-Sign Rails"], style: bold_style
+        
+        ##create signature from binary data
+        image = Rails.root.join('tmp', "sign.png");
+        File.open(image, 'wb') do |f|
+          f.write Base64.decode64(params[:data_uri].split(",")[1])
+        end
+        
+        sheet.add_row
+        sheet.add_row
+        signature = File.expand_path(image, __FILE__)
+
+        sheet.add_image(image_src: signature, noSelect: true, noMove: true) do |i|
+          i.width = 150
+          i.height = 50
+          i.start_at 0, sheet.rows.length
+        end
+
+        sheet.add_row
+        sheet.add_row
+        sheet.add_row
+        sheet.add_row ["Signed By User"], style: bold_style
+
+      end
+
+      return send_data package.to_stream.read, type: "application/xlsx", filename: "e-Sign-rails.xlsx"
+     
+      ###add two blank rows
     end
 
   end
@@ -42,9 +79,14 @@ class HomeController < ApplicationController
 
   private
     
-    ##initialize pdf
+    ##initialize pdf object
     def get_pdf
       Prawn::Document.new(page_layout: :portrait, page_size: 'A4', top_margin: 10, left_margin: 50)
+    end
+
+    ##initialize xls object
+    def get_xls
+      package = Axlsx::Package.new
     end
 
     ##encode data uri

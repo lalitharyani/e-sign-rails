@@ -31,6 +31,7 @@ signaturePad.isEmpty();
 var wrapper = document.getElementById("signature-pad"),
   clearButton = wrapper.querySelector("[data-action=clear]"),
   signPdfButton = wrapper.querySelector("[data-action=sign-pdf]"),
+  signXlsButton = wrapper.querySelector("[data-action=sign-xls]"),
   previewButton = wrapper.querySelector("[data-action=preview]"),
   canvas = wrapper.querySelector("canvas"),
   signaturePad;
@@ -46,13 +47,24 @@ previewButton.addEventListener("click", function (event) {
 
 ///process pdf document
 signPdfButton.addEventListener("click", function (event) {
+   processSign("pdf");
+
+});
+
+///process xls document
+signXlsButton.addEventListener("click", function (event) {
+  processSign("xls");
+
+});
+
+
+function processSign(type){
   if (signaturePad.isEmpty()) {
     alert("Please provide signature first.");
   } else {
     $('#data_uri').val(signaturePad.toDataURL());
-    $('#doc_type').val("pdf");
+    $('#doc_type').val(type);
 
     $('#form').submit();
   }
-
-});
+}
