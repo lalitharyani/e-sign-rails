@@ -97,7 +97,8 @@ class HomeController < ApplicationController
        File.open(img, 'wb') do |f|
         f.write Base64.decode64(encode_uri)
       end
-
+      
+      ##return image object
       return img
 
     end

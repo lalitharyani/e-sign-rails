@@ -1,0 +1,52 @@
+
+<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular.js"></script>
+<script src="https://raw.github.com/zensh/ui-autocomplete/master/src/autocomplete.js"></script>
+<script src="http://ceric35.net/~eric/autocomplete.js"></script>
+
+<script type="text/javascript">
+var myAppModule = angular.module('MyModule', ["ui.autocomplete"]);
+
+myAppModule.controller('MyController', function ($scope, $compile) {
+  $scope.myTestListIds = [ "Country", "Programming", "Planet" ];
+  $scope.selecteModel = {};
+  $scope.data = {
+    "Country": [ "France", "Finland", "USA"],
+    "Programming" : [ "Java", "JavaScript", "CSS", "HTML5" ],
+    "Planet": [ "Earth", "Mars", "Jupiter", "Saturn" ]
+  };
+
+  /* config object */
+  $scope.myOption = function(listId) {
+    return {
+      options: {
+            html: true,
+            focusOpen: true,
+            onlySelect: true,
+            source: function (request, response) {
+                var listData = $scope.data[listId];
+                var result = [];
+                angular.forEach(listData, function(s) {
+                  result.push({label: s, value:s});
+                });
+                response(result);
+            }
+        }
+    };
+  }
+});    
+</script>
+
+<div ng-app="MyModule">
+  <div ng-controller="MyController">
+    <table border="1">
+      <tr ng-repeat="listId in myTestListIds">
+         <td>Autocomplete for {{listId}} : </td>
+         <td><input type="text" ng-model="selecteModel[listId]" ui-autocomplete="myOption(listId)" /></td>
+      </tr>
+    </table>
+    Selected values = {{selecteModel}}.
+  </div>
+</div>
